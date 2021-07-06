@@ -1,4 +1,4 @@
-package Scheduler;
+package Scheduler2;
 
 import java.util.Scanner;
 
@@ -6,8 +6,9 @@ public class Main {
 
     Scanner kb;
     private int capa = 1;
-    public Event [] events = new Event[capa];
+    public Event[] events = new Event[capa];
     public int n = 0;
+
     public void processCommand() {
         kb = new Scanner(System.in);
         while (true) {
@@ -22,13 +23,13 @@ public class Main {
                     handleAddDurationEvent();
                 } else if (type.equals("마감")) {
                     handleAddDeadlinedEvent();
-                } else if (type.equals("돌아가기")){
+                } else if (type.equals("돌아가기")) {
                     break;
                 }
             } else if (command.equals("리스트") || command.equals("목록")) {
                 handleList();
             } else if (command.equals("보기") || command.equals("일정")) {
-
+                handleShow();
             } else if (command.equals("삭제")) {
 
                 break;
@@ -36,24 +37,34 @@ public class Main {
         }
     }
 
-    private void addEvent(OneDayEvent ev){
-        if(n >= capa){
+    private void handleShow() {
+        String dateString = kb.next();
+        MyDate theDate = parseDateString(dateString);
+        for (int i = 0; i < n; i++) {
+            if (events[i].isRelevant(theDate)) {
+                System.out.println(events[i].toString());
+            }
+        }
+    }
+
+    private void addEvent(OneDayEvent ev) {
+        if (n >= capa) {
             reallocate();
         }
         events[n++] = ev;
     }
 
     private void reallocate() {
-        Event [] tmp = new Event[capa*2];
-        for (int i =0; i<n; i++){
-         tmp[i] = events[i];
+        Event[] tmp = new Event[capa * 2];
+        for (int i = 0; i < n; i++) {
+            tmp[i] = events[i];
             events = tmp;
         }
-        capa*=2;
+        capa *= 2;
     }
 
     private void handleList() {
-        for (int i = 0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             System.out.println("   " + events[i].toString());
         }
     }
@@ -78,18 +89,18 @@ public class Main {
         System.out.print("  제목: ");
         String title = kb.nextLine();
 
-        OneDayEvent ev = new OneDayEvent(title,date);
+        OneDayEvent ev = new OneDayEvent(title, date);
         addEvent(ev);
     }
 
     private MyDate parseDateString(String dateString) {
-        String [] tokens = dateString.split("/");
+        String[] tokens = dateString.split("/");
 
         int year = Integer.parseInt(tokens[0]); //문자열을 정수형으로 바꿔주는 클래스 메서드
         int month = Integer.parseInt(tokens[1]);
         int day = Integer.parseInt(tokens[2]);
 
-        MyDate d = new MyDate(year,month,day);
+        MyDate d = new MyDate(year, month, day);
         return d;
 
     }
