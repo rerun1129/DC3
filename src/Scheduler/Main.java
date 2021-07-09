@@ -1,11 +1,13 @@
 package Scheduler;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
     Scanner kb;
-    private int capa = 1;
+    private int capa = 10;
+
     public Event [] events = new Event[capa];
     public int n = 0;
     public void processCommand() {

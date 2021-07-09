@@ -1,13 +1,18 @@
 package Scheduler2;
 
+
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
 
     Scanner kb;
-    private int capa = 1;
-    public Event[] events = new Event[capa];
-    public int n = 0;
+    //private int capa = 1;
+    public ArrayList<Event> events = new ArrayList<>();
+    //public Event[] events = new Event[capa];
+    //public int n = 0;
 
     public void processCommand() {
         kb = new Scanner(System.in);
@@ -30,6 +35,8 @@ public class Main {
                 handleList();
             } else if (command.equals("보기") || command.equals("일정")) {
                 handleShow();
+            }else if (command.equals("정렬")) {
+                    Collections.sort(events);
             } else if (command.equals("삭제")) {
 
                 break;
@@ -40,33 +47,31 @@ public class Main {
     private void handleShow() {
         String dateString = kb.next();
         MyDate theDate = parseDateString(dateString);
-        for (int i = 0; i < n; i++) {
-            if (events[i].isRelevant(theDate)) {
-                System.out.println(events[i].toString());
+        for(Event ev : events) {
+            if (ev.isRelevant(theDate)) {
+                System.out.println(ev.toString());
             }
         }
     }
 
-    private void addEvent(OneDayEvent ev) {
-        if (n >= capa) {
-            reallocate();
-        }
-        events[n++] = ev;
+    private void addEvent(Event ev) {
+       // if (events.size() >= capa) {
+       //     reallocate();
+        //}
+        events.add(ev);
     }
 
-    private void reallocate() {
-        Event[] tmp = new Event[capa * 2];
-        for (int i = 0; i < n; i++) {
-            tmp[i] = events[i];
-            events = tmp;
-        }
+    /*private void reallocate() {
         capa *= 2;
-    }
+        Event[] tmp = new Event[capa];
+        System.arraycopy(events, 0, tmp ,0, events.length);
+        events = tmp;
+    }*/
 
     private void handleList() {
-        for (int i = 0; i < n; i++) {
-            System.out.println("   " + events[i].toString());
-        }
+       // for (int i = 0; i < events.size(); i++)
+        for(Event ev : events)  //향상된 for문
+            System.out.println("   " + ev.toString());
     }
     //해당 메서드에서 events 배열에 3가지 클래스 객체의 toString을 동시에 활용할 수 있기 때문에 for문이
     //3줄 들어갈 것을 1줄로 줄일수 있게 된다.(event배열에 데드라인, 듀레이션, 원데이 데이터가 모두 들어갈 수 있는것)
